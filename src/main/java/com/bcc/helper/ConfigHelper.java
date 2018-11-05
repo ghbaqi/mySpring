@@ -8,12 +8,13 @@ import java.util.Properties;
 /**
  * 获取各种配置属性
  *
- * @author huangyong
- * @since 1.0.0
  */
 public final class ConfigHelper {
 
     private static final Properties CONFIG_PROPS = PropsUtil.loadProps(ConfigConstant.CONFIG_FILE);
+
+    private ConfigHelper() {
+    }
 
     /**
      * 获取 JDBC 驱动
