@@ -49,6 +49,7 @@ public final class ClassUtil {
         return loadClass(className, true);
     }
 
+    //TODO 项目不能放在磁盘上有中文的路径下
     /**
      * 获取指定包名下的所有类
      */
@@ -95,6 +96,10 @@ public final class ClassUtil {
                 return (file.isFile() && file.getName().endsWith(".class")) || file.isDirectory();
             }
         });
+        LOGGER.info("files = "+files);
+        if (files == null || files.length == 0) {
+            return;
+        }
         for (File file : files) {
             String fileName = file.getName();
             if (file.isFile()) {
