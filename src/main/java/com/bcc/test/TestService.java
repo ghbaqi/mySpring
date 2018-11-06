@@ -1,5 +1,7 @@
 package com.bcc.test;
 
-//@Service
+import com.bcc.annotation.Service;
+
+@Service
 public class TestService {
 }

@@ -9,10 +9,13 @@
 - 实现数据库事务
 ## 优化提高 ##
 ## 使用方式 ##
+
+1. 需要在你的项目中加入框架需要的配置文件 smart.properties
 1. Service 表示业务层注解,Controller 表示 web层注解,Inject bean 注入注解，Transaction 事务注解
 1. 下载项目安装到本地 mvn install 。 在你自己开发的项目 pom 文件导入此项目 `<dependency>
             <groupId>com.bcc</groupId>
             <artifactId>myspring</artifactId>
             <version>1.0.0</version>
         </dependency>`
-1. 
+1. Action 注解的使用,加在 controller 的方法上 @Action("请求方法:/请求路径")  eg. @Action("get:/getById")
+1. Cotroller 里面方法的写法 . 如果想返回页面,返回值为 ModelAndView 对象 ; 只想返回数据,则返回 ServerResponse 对象 . 想要传入参数 , 在方法参数里面放 RequestParam 对象即可 , 目前只支持将参数映射到 map 中 ,以 key-value 形式使用 , 不支持对象
