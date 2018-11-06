@@ -4,6 +4,7 @@ import com.bcc.annotation.Controller;
 import com.bcc.annotation.Service;
 import com.bcc.util.ClassUtil;
 
+import java.lang.annotation.Annotation;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -50,5 +51,22 @@ public final class ClassHelper {
      */
     public static Set<Class<?>> getBeanClassSet() {
         return CLASS_SET.stream().filter(c -> c.isAnnotationPresent(Controller.class) || c.isAnnotationPresent(Service.class)).collect(Collectors.toSet());
+    }
+
+    /**
+     * 获取某个类及其所有子类
+     */
+    public static Set<Class<?>> getClassesBySuper(Class<?> superClass) {
+        return  CLASS_SET.stream().filter(c->superClass.isAssignableFrom(c)&&!superClass.equals(c))
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * 获取带有某注解的类
+     * eg. 获取带有 @Aspect 注解的类
+     */
+    public static Set<Class<?>> getClassesByAnnotation(Class<? extends Annotation> anno) {
+        return CLASS_SET.stream().filter(c->c.isAnnotationPresent(anno))
+                .collect(Collectors.toSet());
     }
 }

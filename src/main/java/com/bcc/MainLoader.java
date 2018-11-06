@@ -1,5 +1,6 @@
 package com.bcc;
 
+import com.bcc.helper.AopHelper;
 import com.bcc.helper.BeanHelper;
 import com.bcc.helper.ClassHelper;
 import com.bcc.helper.ConfigHelper;
@@ -17,7 +18,7 @@ import java.util.List;
 public class MainLoader {
 
     public static void init() {
-        List<Class<?>> classes = Arrays.asList(ConfigHelper.class,ClassHelper.class, BeanHelper.class, IocHelper.class, ControllerHelper.class);
+        List<Class<?>> classes = Arrays.asList(ConfigHelper.class, ClassHelper.class, BeanHelper.class, AopHelper.class, IocHelper.class, ControllerHelper.class);
         for (Class<?> aClass : classes) {
             ClassUtil.loadClass(aClass.getName());
         }

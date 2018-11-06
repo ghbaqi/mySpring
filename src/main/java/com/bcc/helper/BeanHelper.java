@@ -40,4 +40,8 @@ public class BeanHelper {
         }
         return (T) o;
     }
+
+    public static void addBean(Class<?> targetClass, Object proxy) {
+        BEAN_MAP.put(targetClass, proxy);
+    }
 }
