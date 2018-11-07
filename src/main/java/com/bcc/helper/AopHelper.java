@@ -1,9 +1,11 @@
 package com.bcc.helper;
 
 import com.bcc.annotation.Aspect;
+import com.bcc.annotation.Service;
 import com.bcc.proxy.AbstractAspect;
 import com.bcc.proxy.Proxy;
 import com.bcc.proxy.ProxyManager;
+import com.bcc.proxy.TransactionAspect;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +33,10 @@ public final class AopHelper {
             for (Map.Entry<Class<?>, List<Proxy>> entry : targetMap.entrySet()) {
                 Class<?> targetClass = entry.getKey();
                 List<Proxy> proxies = entry.getValue();
-                Object proxy = ProxyManager.createProxy(targetClass, proxies);
-                BeanHelper.addBean(targetClass, proxy);
+                Object proxy = ProxyManager.createProxy(targetClass, proxies);   // ! ! !
+                BeanHelper.addBean(targetClass, proxy);                          //  ! ! ! 如何起作用的
+                // 将原来 IOC 容器中的 Controller 对象, 已经替换成现在创建的代理对象
+                // dispatchServlet  中获取到的是代理对象 , 是调用了代理对象的方法进行处理 .
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,6 +65,25 @@ public final class AopHelper {
      */
     private static Map<Class<?>, Set<Class<?>>> createProxyMap() {
         HashMap<Class<?>, Set<Class<?>>> map = new HashMap<>();
+        addCommoAspectProxy(map);
+        addTransactionAspectProxy(map);
+        return map;
+    }
+
+    // TODO 暂时只支持 service 上的 事务注解
+    /**
+     * 将所有 service 类 都添加事务切面 TransactionAspect
+     */
+    private static void addTransactionAspectProxy(HashMap<Class<?>, Set<Class<?>>> map) {
+        Set<Class<?>> classes = ClassHelper.getClassesByAnnotation(Service.class);
+        map.put(TransactionAspect.class, classes);
+    }
+
+    /**
+     * key   =  继承自 AbastractAspect  的所有普通切面类
+     * value =  Aspect 的 value 值 所指向的所有类
+     */
+    private static void addCommoAspectProxy(HashMap<Class<?>, Set<Class<?>>> map) {
         Set<Class<?>> aspectClasses = ClassHelper.getClassesBySuper(AbstractAspect.class);
         aspectClasses.stream().filter(c -> c.isAnnotationPresent(Aspect.class))
                 .forEach(c -> {
@@ -68,7 +91,6 @@ public final class AopHelper {
                     Set<Class<?>> classesByAnnotation = ClassHelper.getClassesByAnnotation(annotation.value());
                     map.put(c, classesByAnnotation);
                 });
-        return map;
     }
 
 
